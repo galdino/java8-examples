@@ -5,13 +5,12 @@ import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
 
 public class Example {
 
@@ -65,6 +64,25 @@ public class Example {
 		LocalDate birthDay = LocalDate.of(2019, Month.MARCH, 11);
 		DayOfWeek dayOfWeek = birthDay.getDayOfWeek();
 		System.out.println("LocalDate.of().getDayOfWeek() --> " + dayOfWeek);
+		
+		//LocalDateTime
+		//LocalDateTime represents a date-time. 
+		//It combines date and time into one instance.
+		LocalDateTime localDateTime = LocalDateTime.of(2019, Month.DECEMBER, 31, 23, 59, 59);
+		
+		DayOfWeek dayOfWeek2 = localDateTime.getDayOfWeek();
+		System.out.println("LocalDateTime.of().getDayOfWeek() --> " + dayOfWeek2);
+		
+		Month month = localDateTime.getMonth();
+		System.out.println("LocalDateTime.of().getMonth() --> " + month);
+		
+		long minuteOfDay = localDateTime.getLong(ChronoField.MINUTE_OF_DAY);
+		System.out.println("LocalDateTime.of().getLong() --> " + minuteOfDay);
+		
+		Instant instant2 = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+		java.util.Date date = Date.from(instant2);
+		System.out.println("LocalDateTime.atZone().toInstant() --> " + date);
+		
 	}
 
 }
