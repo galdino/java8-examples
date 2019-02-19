@@ -1,8 +1,11 @@
 package com.galdino.streams;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Example {
 
@@ -79,7 +82,39 @@ public class Example {
 		.sorted()
 		.reduce((s1, s2) -> s1 + "#" + s2);
 		reduced.ifPresent((s) -> System.out.println("stream().sorted().reduce() --> " + s));
-
+		
+		//Primitive Streams
+		//Special kinds of streams for working with the primitive data types int, long and double.
+		//And primitive streams support the additional terminal aggregate operations sum() and average().
+		IntStream.range(1, 4)
+			.forEach((s) -> System.out.println("IntStream.range() --> " + s));
+		
+		Arrays.stream(new int[] {1,2,3})
+			.map(n -> 2 * n + 1)
+			.average()
+			.ifPresent((s) -> System.out.println("Arrays.stream().average() --> " + s));
+		
+		Stream.of("a1","a2","a3")
+			.map((s) -> s.substring(1))
+			.mapToInt((s) -> Integer.parseInt(s))
+			.max()
+			.ifPresent((s) -> System.out.println("Stream.of().map().mapToInt().max() --> " + s));
+	
+		IntStream.range(1, 4)
+			.mapToObj((s) -> "a" + s)
+			.forEach((s) -> System.out.println("IntStream.range().mapToObj() --> " + s));
+		
+		Stream.of(1.0, 2.0, 3.0)
+			.mapToInt((s) -> new Double(s).intValue())
+			.mapToObj((s) -> "a" + s)
+			.forEach((s) -> System.out.println("Stream.of().mapToInt().mapToObj() --> " + s));
+		
+		Stream.of("d2","a2","b1","b3","c")
+			.filter((s) -> {
+				System.out.println("filter: " + s);
+				return true;
+			})
+			.forEach((s) -> System.out.println("forEach: " + s));
 	}
 
 }
