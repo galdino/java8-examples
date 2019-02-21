@@ -3,9 +3,14 @@ package com.galdino.streams;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import com.galdino.functional.interfaces.Person;
 
 public class Example {
 
@@ -115,6 +120,31 @@ public class Example {
 				return true;
 			})
 			.forEach((s) -> System.out.println("forEach: " + s));
+		
+		//Advanced Operations
+		//Complex operations collect, flatMap and reduce.
+		List<Person> persons = Arrays.asList(new Person("Max", 18),
+					  new Person("Peter", 23),
+					  new Person("Pamela", 23),
+					  new Person("David", 12));
+		
+		List<Person> filtered = persons
+			.stream()
+			.filter((s) -> s.getFirstName().startsWith("P"))
+			.collect(Collectors.toList());		
+		System.out.println("stream().filter().collect() --> " + filtered);
+		
+		Map<Integer, List<Person>> personsByAge = persons
+			.stream()
+			.collect(Collectors.groupingBy((s) -> s.getAge()));
+		personsByAge.forEach((age, p) -> System.out.format("age %s: %s\n", age, p));
+		
+		Double averageAge = persons
+			.stream()
+			.collect(Collectors.averagingInt((s) -> s.getAge()));
+		System.out.println("stream().collect(Collectors.averagingInt()) --> " + averageAge);
+		
+		
 	}
 
 }
