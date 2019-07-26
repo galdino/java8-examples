@@ -144,6 +144,56 @@ public class Example {
 			.collect(Collectors.averagingInt((s) -> s.getAge()));
 		System.out.println("stream().collect(Collectors.averagingInt()) --> " + averageAge);
 		
+		IntSummaryStatistics ageSummary = persons
+		.stream()
+		.collect(Collectors.summarizingInt((s) -> s.getAge()));
+		System.out.println("stream().collect(Collectors.summarizingInt()) --> " + ageSummary);
+		
+		//The join collector accepts a delimiter as well as an optional prefix and suffix.
+		String phrase = persons
+		.stream()
+		.filter((s) -> s.getAge() >= 18)
+		.map((s)-> s.getFirstName())
+		.collect(Collectors.joining(" and ", "In Germany ", " are of legal age."));
+		System.out.println("stream().collect(Collectors.joining()) --> " + phrase);
+		
+		//In order to transform the stream elements into a map, we have to specify how both the keys and the values should be mapped.
+		Map<Integer, String> map = persons
+		.stream()
+		.collect(Collectors.toMap(
+				(s) -> s.getAge(), 
+				(s) -> s.getFirstName(),
+				(name1, name2) -> name1 + ";" + name2));
+		System.out.println("stream().collect(Collectors.toMap()) --> " + map);
+		
+		//Creating a new collector via Collector.of()
+		Collector<Person, StringJoiner, String> personNameCollector = Collector.of(() -> new StringJoiner(" | "), //supplier
+					 (j, s) -> j.add(s.getFirstName().toUpperCase()), //accumulator 
+					 (j1, j2) -> j1.merge(j2), //combiner 
+					 StringJoiner::toString);
+		
+		
+		String names = persons
+		.stream()
+		.collect(personNameCollector);
+		System.out.println("stream().collect(Collector.of()) --> " + names);
+		
+		//FlatMap transforms each element of the stream into a stream of other objects.
+		List<Foo> foos = new ArrayList<>();
+		
+		IntStream.
+			range(1, 4)
+			.forEach((i) -> foos.add(new Foo("Foo" + i)));
+		
+		foos.forEach((f) ->
+				IntStream.
+				range(1, 4).
+				forEach((i) -> f.bars.add(new Bar("Bar" + i + " <- " + f.name))));
+		
+		foos.stream()
+			.flatMap((f) -> f.bars.stream())
+			.forEach((b) -> System.out.println(b.name));
+		
 		
 	}
 
