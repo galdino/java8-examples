@@ -194,6 +194,31 @@ public class Example {
 			.flatMap((f) -> f.bars.stream())
 			.forEach((b) -> System.out.println(b.name));
 		
+		//The reduction operation combines all elements of the stream into a single result.
+		//BinaryOperator accumulator function
+		persons
+			.stream()
+			.reduce((p1, p2) -> p1.getAge() > p2.getAge() ? p1 : p2)
+			.ifPresent((p) -> System.out.println("stream().reduce(BinaryOperator) --> " +   p.getFirstName()));
+		
+		//identity value and BinaryOperator accumulator function
+		Person result = persons
+			.stream()
+			.reduce(new Person("", 0), (p1, p2) -> {
+				p1.setAge(p1.getAge() + p2.getAge());
+				p1.setFirstName(p1.getFirstName() + p2.getFirstName());
+				return p1;
+			});
+		
+		System.out.println("stream().reduce(identity, BinaryOperator) --> "+ "name: " + result.getFirstName() + " age: " + result.getAge());
+		
+		//identity value, BinaryOperator accumulator function and combiner function of type BinaryOperator
+		Integer ageSum = persons
+			.stream()
+			.reduce(0, (sum, p) -> sum += p.getAge(), (sum1, sum2) -> sum1 + sum2);
+		
+		System.out.println("stream().reduce(identity, BinaryOperator, combiner) --> ageSum: " + ageSum);
+		
 		
 	}
 
